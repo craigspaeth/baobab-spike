@@ -1,35 +1,33 @@
 import React from 'react'
 import { tree, chats } from 'tree'
+import functional from 'react-functional'
 
 let { div, input } = React.DOM
 
-class AuthModal extends React.Component {
+let componentDidMount = (refs) => {
+  refs.input.focus()
+}
 
-  componentDidMount() {
-    this.refs.input.focus()
-  }
+let submitName = (refs, e) => {
+  if (e.which != 13) return
+  tree.set('currentUserName', e.target.value)
+  tree.set('closedAuthModal', true)
+  refs.input
+}
 
-  submitName(e) {
-    if (e.which != 13) return
-    tree.set('currentUserName', e.target.value)
-    tree.set('closedAuthModal', true)
-    this.refs.input
-  }
-
-  render () {
-    if (tree.get().closedAuthModal) {
-      return div({})
-    } else {
-      return (
-      div({ style: styles.background },
-        div({ style: styles.modal },
-          input({
-            placeholder: 'Enter your name',
-            onKeyUp: this.submitName.bind(this),
-            ref: 'input'
-          })))
-      )
-    }
+let render = (props, refs) => {
+  if (tree.get().closedAuthModal) {
+    return div({})
+  } else {
+    return (
+    div({ style: styles.background },
+      div({ style: styles.modal },
+        input({
+          placeholder: 'Enter your name',
+          onKeyUp: submitName.bind(null, cmp.refs),
+          ref: 'input'
+        })))
+    )
   }
 }
 
@@ -53,4 +51,4 @@ let styles = {
   }
 }
 
-export default (props) => React.createElement(AuthModal, props)
+export default functional({ componentDidMount, submitName, render })
